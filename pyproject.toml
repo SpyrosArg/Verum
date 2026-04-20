@@ -4,21 +4,23 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "verum"
-version = "0.1.0"
+version = "0.1.1"
 description = "Proof that AI saw what you think it saw."
 authors = [
     { name = "Spyros Argyrakos" }
 ]
 readme = "README.md"
-license = { text = "MIT" }
+license = "MIT"
 requires-python = ">=3.9"
 keywords = ["ai", "security", "cryptography", "audit", "integrity", "ai-agents"]
 classifiers = [
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Topic :: Security :: Cryptography",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
+
+[tool.setuptools]
+py-modules = ["verum"]
 
 [project.urls]
 Homepage = "https://github.com/SpyrosArg/Verum"
