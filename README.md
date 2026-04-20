@@ -97,7 +97,7 @@ If the input was changed, the seal breaks. Always.
 No pip. No dependencies. Clone and run.
 
 ```bash
-git clone https://github.com/yourusername/arche.git
+git clone (https://github.com/SpyrosArg/Arche)
 python example.py
 ```
 
