@@ -1,8 +1,8 @@
-from arche import seal, bind, verify, export
+from verum import seal, bind, verify, export
 import json
 
 print("=" * 60)
-print("  arche — satellite telemetry integrity demo")
+print("  verum — satellite telemetry integrity demo")
 print("  scenario: ground station AI anomaly detector")
 print("=" * 60)
 
@@ -77,7 +77,7 @@ print(f"  result: {result}")
 
 print("\n  the seal exposes the manipulation.")
 print("  the AI decision log shows nothing wrong.")
-print("  arche catches what the log cannot.")
+print("  verum catches what the log cannot.")
 
 # --- show the receipt ---
 print("\n" + "-" * 60)
