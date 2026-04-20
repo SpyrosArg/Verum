@@ -97,7 +97,7 @@ If the input was changed, the seal breaks. Always.
 No pip. No dependencies. Clone and run.
 
 ```bash
-git clone https://github.com/SpyrosArg/verum.git
+git clone https://github.com/SpyrosArg/Verum.git
 python example.py
 ```
 
