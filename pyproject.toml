@@ -18,5 +18,5 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/SpyrosArg/Arche"
-Repository = "https://github.com/SpyrosArg/Arche"
+Homepage = "https://github.com/SpyrosArg/Verum"
+Repository = "https://github.com/SpyrosArg/Verum"
