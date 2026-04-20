@@ -168,25 +168,17 @@ bool(result)    # same as result.valid
 
 ## Use cases
 
-**AI agent pipelines** — seal every handoff between agents. Any agent downstream can prove it received exactly what was sent. Makes multi-agent chains fully auditable at every link.
+**AI agent pipelines** —> seal every handoff between agents. Any agent downstream can prove it received exactly what was sent. Makes multi-agent chains fully auditable at every link.
 
-**Space and critical infrastructure** — AI anomaly detectors acting on telemetry. Verum proves the AI acted on the genuine sensor feed, not a replayed or modified signal.
+**Space and critical infrastructure** —> AI anomaly detectors acting on telemetry. Verum proves the AI acted on the genuine sensor feed, not a replayed or modified signal.
 
-**Healthcare** — EU AI Act Article 12 requires high-risk AI systems to log their decisions. Verum extends that to the input layer.
+**Healthcare** —> EU AI Act Article 12 requires high-risk AI systems to log their decisions. Verum extends that to the input layer.
 
-**Finance** — verifiable record of the exact data state at the moment of every algorithmic decision. Reproducible in any audit or dispute.
+**Finance** —> verifiable record of the exact data state at the moment of every algorithmic decision. Reproducible in any audit or dispute.
 
 ---
 
-## Files
 
-```
-verum/
-├── verum.py            the primitive (150 lines, no dependencies)
-├── example.py          three-agent pipeline walkthrough
-├── example_space.py    satellite telemetry scenario
-└── README.md
-```
 
 ---
 
