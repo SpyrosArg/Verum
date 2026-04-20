@@ -1,5 +1,5 @@
 """
-verum — Proof that AI saw what you think it saw.
+Verum, Proof that AI saw what you think it saw.
 
 Three functions:
     seal(data, source_id)           — fingerprint data before AI sees it
@@ -14,7 +14,6 @@ import hmac
 import json
 import time
 import secrets
-from typing import Any
 
 
 class VerumResult:
@@ -30,6 +29,15 @@ class VerumResult:
 
     def __bool__(self) -> bool:
         return self.valid
+
+
+def _encode(data: str, source_id: str, timestamp: int, nonce: str) -> bytes:
+    """
+    Length-prefixed encoding prevents separator collision attacks.
+    data='a|b' source='c' is unambiguously different from data='a' source='b|c'.
+    """
+    parts = f"{len(data)}:{data}|{len(source_id)}:{source_id}|{timestamp}|{nonce}"
+    return parts.encode("utf-8")
 
 
 def seal(data: str, source_id: str = "default") -> dict:
@@ -50,7 +58,7 @@ def seal(data: str, source_id: str = "default") -> dict:
     nonce = secrets.token_hex(16)
 
     fingerprint = hashlib.sha3_256(
-        f"{data}|{source_id}|{timestamp}|{nonce}".encode("utf-8")
+        _encode(data, source_id, timestamp, nonce)
     ).hexdigest()
 
     return {
@@ -108,7 +116,7 @@ def verify(receipt: dict, original_data: str) -> VerumResult:
     s = receipt["seal"]
 
     expected = hashlib.sha3_256(
-        f"{original_data}|{s['source_id']}|{s['timestamp_ns']}|{s['nonce']}".encode("utf-8")
+        _encode(original_data, s["source_id"], s["timestamp_ns"], s["nonce"])
     ).hexdigest()
 
     if not hmac.compare_digest(expected, s["fingerprint"]):
