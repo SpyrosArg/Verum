@@ -26,7 +26,7 @@ flowchart TD
 
     C(["AI system
     ───────────────
-    processes whatever it receives"])
+    processes what it receives"])
 
     D(["Decision
     ───────────────
