@@ -15,31 +15,31 @@ That is the gap. verum closes it.
 
 ```mermaid
 flowchart TD
-    A(["  Real world data
-    ─────────────────
+    A(["Real world data
+    ───────────────
     telemetry · sensors · feeds"])
 
-    B(["  Silent manipulation
-    ─────────────────
+    B(["Silent manipulation
+    ───────────────
     possible here · undetectable
-    no existing tool catches this"])
+    no tool catches this"])
 
-    C(["  AI system
-    ─────────────────
+    C(["AI system
+    ───────────────
     processes whatever it receives"])
 
-    D(["  Decision
-    ─────────────────
+    D(["Decision
+    ───────────────
     signed and logged ✓"])
 
     A -->|enters pipeline| B
     B -->|reaches AI unchallenged| C
     C --> D
 
-    style A fill:#f8fafc,stroke:#94a3b8,color:#334155,rx:12
-    style B fill:#fff1f2,stroke:#fda4af,color:#9f1239,rx:12
-    style C fill:#f8fafc,stroke:#94a3b8,color:#334155,rx:12
-    style D fill:#f0fdf4,stroke:#86efac,color:#166534,rx:12
+    style A fill:#f8fafc,stroke:#94a3b8,color:#334155
+    style B fill:#fff1f2,stroke:#fda4af,color:#9f1239
+    style C fill:#f8fafc,stroke:#94a3b8,color:#334155
+    style D fill:#f0fdf4,stroke:#86efac,color:#166534
 ```
 
 Logs prove the decision happened.  
@@ -51,29 +51,29 @@ They cannot prove the input was genuine.
 
 ```mermaid
 flowchart TD
-    A(["  Data arrives
-    ─────────────────
+    A(["Data arrives
+    ───────────────
     raw · untouched · live"])
 
-    B(["  verum seals it
-    ─────────────────
-    fingerprint + external timestamp
-    before the AI sees anything"])
+    B(["verum seals it
+    ───────────────
+    fingerprint + timestamp
+    before AI sees anything"])
 
-    C(["  AI processes
-    ─────────────────
+    C(["AI processes
+    ───────────────
     works as normal
-    nothing changes for the AI"])
+    nothing changes"])
 
-    D(["  Receipt is born
-    ─────────────────
-    decision + seal · travel together
+    D(["Receipt is born
+    ───────────────
+    decision + seal together
     compact · tamper-evident"])
 
-    E(["  Anyone verifies
-    ─────────────────
+    E(["Anyone verifies
+    ───────────────
     regulator · court · auditor
-    no AI access needed · ever"])
+    no AI access needed"])
 
     A --> B
     B --> C
@@ -84,7 +84,7 @@ flowchart TD
     style B fill:#eff6ff,stroke:#93c5fd,color:#1e40af
     style C fill:#f8fafc,stroke:#94a3b8,color:#334155
     style D fill:#eff6ff,stroke:#93c5fd,color:#1e40af
-    style E fill:#f0fdf4,stroke:#86efac,color:#166534
+    style E fill:#f0fdf4,stroke:#86efac,color:#166634
 ```
 
 One seal. Generated before the AI touches anything.  
