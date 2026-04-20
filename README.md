@@ -176,7 +176,7 @@ bool(result)    # same as result.valid
 
 **Finance** —> verifiable record of the exact data state at the moment of every algorithmic decision. Reproducible in any audit or dispute.
 
----
+
 
 
 
