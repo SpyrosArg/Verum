@@ -1,0 +1,1183 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verum — Proof that AI saw what you think it saw</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      :root {
+        --paper: #f2ede6;
+        --paper2: #ede7de;
+        --ink: #0f0e0c;
+        --ink2: #2a2825;
+        --muted: #7a7368;
+        --muted2: #a09890;
+        --rule: #d4ccc0;
+        --rule2: #c4bbb0;
+        --amber: #c8750a;
+        --amber-light: #fdf3e3;
+        --amber-mid: #f5d9a8;
+        --red: #c0392b;
+        --green: #1a6b3c;
+        --font-display: "Playfair Display", Georgia, serif;
+        --font-body: "Outfit", sans-serif;
+        --font-mono: "Space Mono", monospace;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--paper);
+        color: var(--ink);
+        font-family: var(--font-body);
+        font-size: 16px;
+        line-height: 1.7;
+        overflow-x: hidden;
+      }
+
+      /* GRAIN */
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.04'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 9999;
+        opacity: 1;
+      }
+
+      /* NAV */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.1rem 3rem;
+        background: rgba(242, 237, 230, 0.92);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--rule);
+      }
+      .nav-logo {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 1.2rem;
+        color: var(--ink);
+        text-decoration: none;
+        letter-spacing: 0.04em;
+      }
+      .nav-logo em {
+        font-style: normal;
+        color: var(--amber);
+      }
+      .nav-links {
+        display: flex;
+        gap: 2.5rem;
+        align-items: center;
+      }
+      .nav-links a {
+        font-size: 0.82rem;
+        color: var(--muted);
+        text-decoration: none;
+        transition: color 0.2s;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        font-family: var(--font-mono);
+      }
+      .nav-links a:hover {
+        color: var(--ink);
+      }
+      .nav-cta {
+        background: var(--ink) !important;
+        color: var(--paper) !important;
+        padding: 0.5rem 1.25rem;
+        border-radius: 3px;
+        font-weight: 400 !important;
+        transition: background 0.2s !important;
+      }
+      .nav-cta:hover {
+        background: var(--ink2) !important;
+      }
+
+      /* HERO */
+      .hero {
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        padding: 8rem 3rem 4rem;
+        max-width: 1300px;
+        margin: 0 auto;
+        position: relative;
+        gap: 4rem;
+      }
+      .hero-left {
+        position: relative;
+        z-index: 1;
+      }
+
+      .hero-kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        color: var(--amber);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-bottom: 2rem;
+        animation: fadeIn 0.5s ease both;
+      }
+      .kicker-line {
+        width: 24px;
+        height: 1px;
+        background: var(--amber);
+      }
+
+      .hero h1 {
+        font-family: var(--font-display);
+        font-size: clamp(3rem, 5vw, 5.5rem);
+        font-weight: 900;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+        margin-bottom: 2rem;
+        animation: fadeIn 0.5s 0.1s ease both;
+      }
+      .hero h1 .line2 {
+        font-style: italic;
+        color: var(--amber);
+      }
+
+      .hero-desc {
+        font-size: 1.1rem;
+        color: var(--muted);
+        max-width: 440px;
+        font-weight: 300;
+        line-height: 1.8;
+        margin-bottom: 2.5rem;
+        animation: fadeIn 0.5s 0.2s ease both;
+      }
+
+      .hero-actions {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        animation: fadeIn 0.5s 0.3s ease both;
+      }
+      .btn-ink {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: var(--ink);
+        color: var(--paper);
+        font-family: var(--font-mono);
+        font-size: 0.78rem;
+        padding: 0.8rem 1.75rem;
+        border-radius: 3px;
+        text-decoration: none;
+        letter-spacing: 0.04em;
+        transition:
+          background 0.2s,
+          transform 0.15s;
+      }
+      .btn-ink:hover {
+        background: var(--ink2);
+        transform: translateY(-1px);
+      }
+      .btn-outline {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: transparent;
+        color: var(--muted);
+        font-family: var(--font-mono);
+        font-size: 0.78rem;
+        padding: 0.8rem 1.5rem;
+        border-radius: 3px;
+        border: 1px solid var(--rule2);
+        text-decoration: none;
+        letter-spacing: 0.04em;
+        transition: all 0.2s;
+      }
+      .btn-outline:hover {
+        border-color: var(--muted);
+        color: var(--ink);
+      }
+
+      /* HERO RIGHT — STAMP VISUAL */
+      .hero-right {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: fadeIn 0.5s 0.4s ease both;
+      }
+      .stamp-container {
+        position: relative;
+        width: 340px;
+        height: 340px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .stamp-bg {
+        position: absolute;
+        inset: 0;
+        border: 2px solid var(--rule);
+        border-radius: 50%;
+        animation: stampRotate 30s linear infinite;
+      }
+      .stamp-bg::before {
+        content: "VERUM · CRYPTOGRAPHIC PROOF · VERUM · CRYPTOGRAPHIC PROOF · VERUM · CRYPTOGRAPHIC PROOF · ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        font-family: var(--font-mono);
+        font-size: 0.6rem;
+        letter-spacing: 0.15em;
+        color: var(--muted2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        background: none;
+      }
+      @keyframes stampRotate {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .stamp-inner {
+        width: 240px;
+        height: 240px;
+        border: 1.5px solid var(--rule2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        background: var(--paper2);
+      }
+      .stamp-core {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .stamp-symbol {
+        font-size: 3rem;
+        animation: symbolPulse 3s ease infinite;
+      }
+      @keyframes symbolPulse {
+        0%,
+        100% {
+          opacity: 0.7;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.05);
+        }
+      }
+      .stamp-word {
+        font-family: var(--font-display);
+        font-weight: 900;
+        font-size: 1.4rem;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        color: var(--ink);
+      }
+      .stamp-sub {
+        font-family: var(--font-mono);
+        font-size: 0.6rem;
+        letter-spacing: 0.2em;
+        color: var(--muted);
+        text-transform: uppercase;
+      }
+      .stamp-verified {
+        position: absolute;
+        bottom: -12px;
+        right: 40px;
+        background: var(--amber);
+        color: white;
+        font-family: var(--font-mono);
+        font-size: 0.65rem;
+        letter-spacing: 0.1em;
+        padding: 0.3rem 0.75rem;
+        border-radius: 2px;
+        text-transform: uppercase;
+        font-weight: 700;
+        animation: verifiedPop 2.5s ease infinite;
+      }
+      @keyframes verifiedPop {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.04);
+        }
+      }
+
+      /* ROTATING TEXT ON CIRCLE */
+      .stamp-circle-text {
+        position: absolute;
+        inset: 0;
+      }
+      .stamp-circle-text svg {
+        width: 100%;
+        height: 100%;
+        animation: stampRotate 20s linear infinite;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* DIVIDER */
+      .rule {
+        border: none;
+        border-top: 1px solid var(--rule);
+        max-width: 1240px;
+        margin: 0 auto;
+      }
+
+      /* SECTIONS */
+      section {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 6rem 3rem;
+        position: relative;
+      }
+
+      .s-number {
+        font-family: var(--font-display);
+        font-size: 6rem;
+        font-weight: 900;
+        color: var(--rule);
+        line-height: 1;
+        margin-bottom: -1.5rem;
+        display: block;
+        font-style: italic;
+      }
+      .s-label {
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--amber);
+        margin-bottom: 0.75rem;
+        display: block;
+      }
+      h2 {
+        font-family: var(--font-display);
+        font-size: clamp(2rem, 4vw, 3.25rem);
+        font-weight: 700;
+        line-height: 1.1;
+        letter-spacing: -0.015em;
+        margin-bottom: 1.5rem;
+      }
+
+      /* WHAT — TWO COL */
+      .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5rem;
+        align-items: start;
+        margin-top: 3rem;
+      }
+      .prose p {
+        color: var(--muted);
+        font-size: 1.05rem;
+        font-weight: 300;
+        margin-bottom: 1.25rem;
+        line-height: 1.85;
+      }
+      .prose p strong {
+        color: var(--ink);
+        font-weight: 500;
+      }
+      .prose p em {
+        font-style: italic;
+        color: var(--ink2);
+      }
+
+      /* FLOW */
+      .flow {
+        border: 1px solid var(--rule);
+        border-radius: 4px;
+        overflow: hidden;
+        background: white;
+      }
+      .flow-node {
+        padding: 1.1rem 1.5rem;
+        border-bottom: 1px solid var(--rule);
+      }
+      .flow-node:last-child {
+        border-bottom: none;
+      }
+      .flow-node-label {
+        font-family: var(--font-mono);
+        font-size: 0.65rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted2);
+        margin-bottom: 0.25rem;
+      }
+      .flow-node-title {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 1rem;
+        color: var(--ink);
+      }
+      .flow-node-sub {
+        font-size: 0.8rem;
+        color: var(--muted);
+        font-family: var(--font-mono);
+        margin-top: 0.15rem;
+      }
+      .flow-node.highlighted {
+        background: var(--amber-light);
+        border-color: var(--amber-mid);
+      }
+      .flow-node.highlighted .flow-node-title {
+        color: var(--amber);
+      }
+      .flow-node.complete {
+        background: #f0faf4;
+      }
+      .flow-node.complete .flow-node-title {
+        color: var(--green);
+      }
+      .flow-arrow-row {
+        padding: 0.5rem 1.5rem;
+        border-bottom: 1px solid var(--rule);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: var(--paper2);
+      }
+      .flow-arrow-row span {
+        font-family: var(--font-mono);
+        font-size: 0.65rem;
+        color: var(--amber);
+        letter-spacing: 0.08em;
+      }
+
+      /* THREE FNS */
+      .fn-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0;
+        margin-top: 3rem;
+        border: 1px solid var(--rule);
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      .fn-item {
+        padding: 2rem;
+        border-right: 1px solid var(--rule);
+        transition: background 0.2s;
+      }
+      .fn-item:last-child {
+        border-right: none;
+      }
+      .fn-item:hover {
+        background: white;
+      }
+      .fn-n {
+        font-family: var(--font-display);
+        font-size: 3rem;
+        font-weight: 900;
+        font-style: italic;
+        color: var(--rule2);
+        line-height: 1;
+        margin-bottom: 0.75rem;
+      }
+      .fn-sig {
+        font-family: var(--font-mono);
+        font-size: 0.82rem;
+        color: var(--ink);
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid var(--rule);
+      }
+      .fn-text {
+        font-size: 0.875rem;
+        color: var(--muted);
+        line-height: 1.7;
+        font-weight: 300;
+      }
+
+      /* CODE */
+      .code-block {
+        margin-top: 3rem;
+        border: 1px solid var(--ink2);
+        border-radius: 4px;
+        overflow: hidden;
+        background: #0f0e0c;
+      }
+      .code-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem 1.25rem;
+        background: #1a1917;
+        border-bottom: 1px solid #2a2825;
+      }
+      .code-dots {
+        display: flex;
+        gap: 5px;
+      }
+      .code-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #333;
+      }
+      .code-dot:nth-child(1) {
+        background: #c0392b;
+      }
+      .code-dot:nth-child(2) {
+        background: #d4a017;
+      }
+      .code-dot:nth-child(3) {
+        background: #27ae60;
+      }
+      .code-fn-label {
+        font-family: var(--font-mono);
+        font-size: 0.68rem;
+        color: #5a6060;
+        letter-spacing: 0.05em;
+      }
+      pre {
+        padding: 1.75rem;
+        overflow-x: auto;
+        font-family: var(--font-mono);
+        font-size: 0.82rem;
+        line-height: 1.9;
+        color: #c8c0b0;
+      }
+      .ck {
+        color: #c792ea;
+      }
+      .cf {
+        color: #7ec8a8;
+      }
+      .cs {
+        color: #d4a857;
+      }
+      .cc {
+        color: #3a4a40;
+      }
+      .cv {
+        color: #7ec8a8;
+      }
+
+      /* DOMAINS */
+      .domain-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        margin-top: 3rem;
+      }
+      .domain-card {
+        padding: 2rem;
+        border: 1px solid var(--rule);
+        border-radius: 4px;
+        background: white;
+        transition:
+          border-color 0.2s,
+          transform 0.15s;
+        position: relative;
+        overflow: hidden;
+      }
+      .domain-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 3px;
+        height: 100%;
+        background: var(--rule);
+        transition: background 0.2s;
+      }
+      .domain-card:hover {
+        border-color: var(--rule2);
+        transform: translateY(-2px);
+      }
+      .domain-card:hover::before {
+        background: var(--amber);
+      }
+      .domain-num {
+        font-family: var(--font-display);
+        font-size: 2.5rem;
+        font-weight: 900;
+        font-style: italic;
+        color: var(--rule2);
+        line-height: 1;
+        margin-bottom: 0.5rem;
+      }
+      .domain-title {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--ink);
+        margin-bottom: 0.625rem;
+      }
+      .domain-text {
+        font-size: 0.875rem;
+        color: var(--muted);
+        line-height: 1.7;
+        font-weight: 300;
+      }
+      .domain-seal {
+        margin-top: 1rem;
+        font-family: var(--font-mono);
+        font-size: 0.68rem;
+        color: var(--amber);
+        letter-spacing: 0.05em;
+      }
+
+      /* INSTALL */
+      .install {
+        text-align: center;
+        padding: 6rem 3rem;
+        max-width: 700px;
+        margin: 0 auto;
+      }
+      .install h2 {
+        margin-bottom: 1rem;
+      }
+      .install-sub {
+        font-size: 1.05rem;
+        color: var(--muted);
+        font-weight: 300;
+        margin-bottom: 2.5rem;
+      }
+      .pip {
+        display: inline-flex;
+        align-items: center;
+        gap: 1rem;
+        background: var(--ink);
+        color: var(--paper);
+        font-family: var(--font-mono);
+        font-size: 0.95rem;
+        padding: 1rem 1.75rem;
+        border-radius: 3px;
+      }
+      .pip-dollar {
+        color: var(--amber);
+      }
+      .pip-copy {
+        background: none;
+        border: 1px solid #3a3830;
+        color: #7a7060;
+        font-family: var(--font-mono);
+        font-size: 0.68rem;
+        padding: 0.2rem 0.6rem;
+        border-radius: 2px;
+        cursor: pointer;
+        transition: all 0.2s;
+        letter-spacing: 0.05em;
+      }
+      .pip-copy:hover {
+        border-color: var(--amber);
+        color: var(--amber);
+      }
+
+      /* FOOTER */
+      footer {
+        border-top: 1px solid var(--rule);
+        padding: 2rem 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 1240px;
+        margin: 0 auto;
+      }
+      .footer-logo {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 1rem;
+        color: var(--ink);
+      }
+      .footer-logo em {
+        font-style: normal;
+        color: var(--amber);
+      }
+      .footer-links {
+        display: flex;
+        gap: 2rem;
+      }
+      .footer-links a {
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        color: var(--muted);
+        text-decoration: none;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        transition: color 0.2s;
+      }
+      .footer-links a:hover {
+        color: var(--ink);
+      }
+      .footer-copy {
+        font-family: var(--font-mono);
+        font-size: 0.68rem;
+        color: var(--muted2);
+        letter-spacing: 0.04em;
+      }
+
+      @media (max-width: 900px) {
+        .hero {
+          grid-template-columns: 1fr;
+          padding: 6rem 1.5rem 3rem;
+          gap: 3rem;
+        }
+        .hero-right {
+          display: none;
+        }
+        nav {
+          padding: 1rem 1.5rem;
+        }
+        .nav-links {
+          display: none;
+        }
+        section {
+          padding: 4rem 1.5rem;
+        }
+        .two-col {
+          grid-template-columns: 1fr;
+          gap: 2.5rem;
+        }
+        .fn-grid {
+          grid-template-columns: 1fr;
+        }
+        .fn-item {
+          border-right: none;
+          border-bottom: 1px solid var(--rule);
+        }
+        .fn-item:last-child {
+          border-bottom: none;
+        }
+        .domain-grid {
+          grid-template-columns: 1fr;
+        }
+        footer {
+          flex-direction: column;
+          gap: 1.5rem;
+          text-align: center;
+        }
+        .footer-links {
+          justify-content: center;
+          flex-wrap: wrap;
+        }
+        .s-number {
+          font-size: 4rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="#" class="nav-logo">ver<em>um</em></a>
+      <div class="nav-links">
+        <a href="#what">What it does</a>
+        <a href="#how">How it works</a>
+        <a href="#use">Use cases</a>
+        <a href="https://github.com/SpyrosArg/Verum" target="_blank">GitHub</a>
+        <a
+          href="https://pypi.org/project/verum/"
+          target="_blank"
+          class="nav-cta"
+          >pip install</a
+        >
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-left">
+        <div class="hero-kicker">
+          <span class="kicker-line"></span>
+          Cryptographic input integrity for AI systems
+        </div>
+
+        <h1>
+          When AI decides,<br />
+          <span class="line2">prove what it saw.</span>
+        </h1>
+
+        <p class="hero-desc">
+          Verum seals the data entering an AI system before any processing
+          begins, creating a tamper-evident proof that anyone can verify, at any
+          time, without access to the AI.
+        </p>
+
+        <div class="hero-actions">
+          <a
+            href="https://github.com/SpyrosArg/Verum"
+            target="_blank"
+            class="btn-ink"
+          >
+            <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.38.6.11.82-.26.82-.58v-2.02c-3.34.73-4.04-1.6-4.04-1.6-.54-1.38-1.33-1.75-1.33-1.75-1.09-.74.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49 1 .1-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02 0 2.04.13 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.65 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.8 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"
+              />
+            </svg>
+            View on GitHub
+          </a>
+          <a
+            href="https://pypi.org/project/verum/"
+            target="_blank"
+            class="btn-outline"
+          >
+            PyPI →
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="stamp-container">
+          <svg
+            style="
+              position: absolute;
+              inset: 0;
+              width: 100%;
+              height: 100%;
+              overflow: visible;
+            "
+          >
+            <defs>
+              <path
+                id="circle"
+                d="M170,170 m-150,0 a150,150 0 1,1 300,0 a150,150 0 1,1 -300,0"
+              />
+            </defs>
+            <text
+              font-family="'Space Mono',monospace"
+              font-size="10.5"
+              fill="#c4bbb0"
+              letter-spacing="5"
+            >
+              <textPath href="#circle">
+                VERUM · CRYPTOGRAPHIC PROOF · AI INPUT INTEGRITY · VERUM ·
+                CRYPTOGRAPHIC PROOF · AI INPUT INTEGRITY ·
+              </textPath>
+            </text>
+          </svg>
+
+          <div class="stamp-inner">
+            <div class="stamp-core">
+              <div class="stamp-symbol">⬡</div>
+              <div class="stamp-word">Verum</div>
+              <div class="stamp-sub">v0.1.4 · MIT · Python 3.9+</div>
+            </div>
+            <div class="stamp-verified">VERIFIED ✓</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="rule" />
+
+    <!-- WHAT IT DOES -->
+    <section id="what">
+      <span class="s-number">01</span>
+      <span class="s-label">What it does</span>
+      <h2>A seal placed before<br />the AI sees anything.</h2>
+
+      <div class="two-col">
+        <div class="prose">
+          <p>
+            The moment data arrives, before any model, any agent, any pipeline
+            touches it,
+            <strong
+              >verum takes a cryptographic fingerprint and binds it to a
+              timestamp.</strong
+            >
+          </p>
+          <p>
+            That fingerprint travels with every AI decision as a compact
+            receipt. It cannot be separated from the decision. It cannot be
+            backdated.
+          </p>
+          <p>
+            Later, a second later, a year later, in a regulatory audit, anyone
+            with the receipt and the original data can verify:
+            <strong>did the AI act on this exact data, unaltered?</strong>
+          </p>
+          <p>
+            <em>Match means genuine. Mismatch means something changed.</em>
+          </p>
+        </div>
+
+        <div class="flow">
+          <div class="flow-node">
+            <div class="flow-node-label">Step 01</div>
+            <div class="flow-node-title">Data arrives</div>
+            <div class="flow-node-sub">raw · live · unprocessed</div>
+          </div>
+          <div class="flow-arrow-row">
+            <span>→ verum.seal() called here</span>
+          </div>
+          <div class="flow-node highlighted">
+            <div class="flow-node-label">Step 02</div>
+            <div class="flow-node-title">Seal created</div>
+            <div class="flow-node-sub">
+              SHA3-256 fingerprint · timestamp · nonce
+            </div>
+          </div>
+          <div class="flow-arrow-row">
+            <span>→ AI processes normally</span>
+          </div>
+          <div class="flow-node">
+            <div class="flow-node-label">Step 03</div>
+            <div class="flow-node-title">AI decides</div>
+            <div class="flow-node-sub">
+              unchanged pipeline · normal operation
+            </div>
+          </div>
+          <div class="flow-arrow-row">
+            <span>→ verum.bind() called here</span>
+          </div>
+          <div class="flow-node complete">
+            <div class="flow-node-label">Step 04</div>
+            <div class="flow-node-title">Receipt issued</div>
+            <div class="flow-node-sub">
+              decision + seal · tamper-evident · verifiable forever
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule" />
+
+    <!-- HOW IT WORKS -->
+    <section id="how">
+      <span class="s-number">02</span>
+      <span class="s-label">How it works</span>
+      <h2>Three functions.<br />Standard library only.</h2>
+
+      <div class="fn-grid">
+        <div class="fn-item">
+          <div class="fn-n">01</div>
+          <div class="fn-sig">seal(data, source_id)</div>
+          <div class="fn-text">
+            Fingerprints raw input using SHA3-256 with a nanosecond timestamp
+            and a cryptographic nonce. Two calls on identical data always
+            produce different seals — the nonce guarantees uniqueness.
+          </div>
+        </div>
+        <div class="fn-item">
+          <div class="fn-n">02</div>
+          <div class="fn-sig">bind(seal, decision)</div>
+          <div class="fn-text">
+            Chains the seal to the AI decision, producing a compact receipt. The
+            decision and the input proof are cryptographically inseparable. One
+            cannot be presented without the other.
+          </div>
+        </div>
+        <div class="fn-item">
+          <div class="fn-n">03</div>
+          <div class="fn-sig">verify(receipt, data)</div>
+          <div class="fn-text">
+            Recomputes the fingerprint from the claimed original data and
+            compares it against the seal using timing-safe comparison. Returns a
+            typed result with a boolean and a human-readable reason.
+          </div>
+        </div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-top">
+          <div class="code-dots">
+            <div class="code-dot"></div>
+            <div class="code-dot"></div>
+            <div class="code-dot"></div>
+          </div>
+          <div class="code-fn-label">example.py — pip install verum</div>
+          <div style="width: 80px"></div>
+        </div>
+        <pre><span class="ck">from</span> <span class="cf">verum</span> <span class="ck">import</span> seal, bind, verify
+
+<span class="cc"># before the AI sees anything</span>
+s = <span class="cf">seal</span>(data=<span class="cs">"your raw input data here"</span>)
+
+<span class="cc"># after the AI decides</span>
+receipt = <span class="cf">bind</span>(seal=s, decision=<span class="cs">"ai decision output here"</span>)
+
+<span class="cc"># verify anytime — by anyone</span>
+result = <span class="cf">verify</span>(receipt=receipt, original_data=<span class="cs">"your raw input data here"</span>)
+
+<span class="cf">print</span>(result.valid)    <span class="cc">  # True</span>
+<span class="cf">print</span>(result.reason)   <span class="cc">  # "input matches seal, timestamp intact"</span></pre>
+      </div>
+    </section>
+
+    <hr class="rule" />
+
+    <!-- USE CASES -->
+    <section id="use">
+      <span class="s-number">03</span>
+      <span class="s-label">Use cases</span>
+      <h2>Anywhere AI acts<br />on live data.</h2>
+
+      <div class="domain-grid">
+        <div class="domain-card">
+          <div class="domain-num">01</div>
+          <div class="domain-title">AI agent pipelines</div>
+          <div class="domain-text">
+            In multi-agent systems, one agent's output becomes the next agent's
+            input. Seal every handoff. Each agent can prove it received exactly
+            what was sent — creating a complete, auditable chain of custody
+            across the entire pipeline.
+          </div>
+          <div class="domain-seal">→ seal every agent handoff</div>
+        </div>
+        <div class="domain-card">
+          <div class="domain-num">02</div>
+          <div class="domain-title">Space &amp; critical infrastructure</div>
+          <div class="domain-text">
+            AI systems in ground stations and control centers act on sensor and
+            telemetry data. Verum provides a cryptographic record that the data
+            the AI acted on was the genuine feed — not a replayed, delayed, or
+            modified signal.
+          </div>
+          <div class="domain-seal">→ seal telemetry before AI processing</div>
+        </div>
+        <div class="domain-card">
+          <div class="domain-num">03</div>
+          <div class="domain-title">Healthcare &amp; regulated industries</div>
+          <div class="domain-text">
+            EU AI Act Article 12 requires high-risk AI systems to log their
+            decisions. Verum extends that requirement to the input layer —
+            proving the data the AI processed was the correct, unaltered record
+            at the time of decision.
+          </div>
+          <div class="domain-seal">→ satisfy Article 12 at the input layer</div>
+        </div>
+        <div class="domain-card">
+          <div class="domain-num">04</div>
+          <div class="domain-title">Finance &amp; algorithmic systems</div>
+          <div class="domain-text">
+            Algorithmic systems act on market data, risk scores, and transaction
+            records. Verum creates a verifiable record of the exact data state
+            at the moment of every consequential decision — reproducible in any
+            audit or dispute.
+          </div>
+          <div class="domain-seal">→ create audit-ready decision records</div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule" />
+
+    <!-- INSTALL -->
+    <div class="install">
+      <span class="s-label" style="display: block; text-align: center"
+        >Get started</span
+      >
+      <h2>One primitive.<br />Zero dependencies.</h2>
+      <p class="install-sub">
+        150 lines. Standard library only. Python 3.9+. Works with anything.
+      </p>
+
+      <div style="display: flex; justify-content: center">
+        <div class="pip">
+          <span class="pip-dollar">$</span>
+          <span>pip install verum</span>
+          <button
+            class="pip-copy"
+            onclick="
+              navigator.clipboard.writeText('pip install verum');
+              this.textContent = 'copied';
+              setTimeout(() => (this.textContent = 'copy'), 2000);
+            "
+          >
+            copy
+          </button>
+        </div>
+      </div>
+
+      <div
+        style="
+          display: flex;
+          gap: 1rem;
+          justify-content: center;
+          margin-top: 2rem;
+          flex-wrap: wrap;
+        "
+      >
+        <a
+          href="https://github.com/SpyrosArg/Verum"
+          target="_blank"
+          class="btn-ink"
+        >
+          <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24">
+            <path
+              d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.38.6.11.82-.26.82-.58v-2.02c-3.34.73-4.04-1.6-4.04-1.6-.54-1.38-1.33-1.75-1.33-1.75-1.09-.74.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49 1 .1-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02 0 2.04.13 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.65 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.8 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"
+            />
+          </svg>
+          GitHub
+        </a>
+        <a
+          href="https://pypi.org/project/verum/"
+          target="_blank"
+          class="btn-outline"
+          >PyPI →</a
+        >
+      </div>
+    </div>
+
+    <div style="max-width: 1240px; margin: 0 auto; padding: 0 3rem">
+      <hr class="rule" style="max-width: 100%" />
+    </div>
+
+    <footer>
+      <div class="footer-logo">ver<em>um</em></div>
+      <div class="footer-links">
+        <a href="https://github.com/SpyrosArg/Verum" target="_blank">GitHub</a>
+        <a href="https://pypi.org/project/verum/" target="_blank">PyPI</a>
+        <a
+          href="https://github.com/SpyrosArg/Verum/blob/main/LICENSE"
+          target="_blank"
+          >MIT License</a
+        >
+      </div>
+      <div class="footer-copy">Spyros Argyrakos · 2026</div>
+    </footer>
+  </body>
+</html>
