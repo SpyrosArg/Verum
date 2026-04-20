@@ -1,4 +1,4 @@
-# Arche
+# Verum
 
 > *Proof that AI saw what you think it saw.*
 
@@ -7,7 +7,7 @@
 Every tool in the AI audit space records what the model **decided**.  
 No tool records whether the data the model saw was **real**.
 
-That is the gap. arche closes it.
+That is the gap. verum closes it.
 
 &nbsp;
 
@@ -47,7 +47,7 @@ They cannot prove the input was genuine.
 
 &nbsp;
 
-## What arche does
+## What verum does
 
 ```mermaid
 flowchart TD
@@ -55,7 +55,7 @@ flowchart TD
     ─────────────────
     raw · untouched · live"])
 
-    B(["  arche seals it
+    B(["  verum seals it
     ─────────────────
     fingerprint + external timestamp
     before the AI sees anything"])
@@ -97,7 +97,7 @@ If the input was changed, the seal breaks. Always.
 No pip. No dependencies. Clone and run.
 
 ```bash
-git clone https://github.com/SpyrosArg/Arche.git
+git clone https://github.com/SpyrosArg/verum.git
 python example.py
 ```
 
@@ -106,7 +106,7 @@ python example.py
 ## Three functions
 
 ```python
-from arche import seal, bind, verify
+from verum import seal, bind, verify
 
 # before the AI sees anything
 s = seal(data="your raw input data here")
@@ -146,7 +146,7 @@ The market data an algorithmic system acted on —> was it the genuine feed at t
 
 ## How it works
 
-Arche takes a cryptographic fingerprint of raw input the moment it arrives. It seals that fingerprint with a timestamp from an external source the operator does not control, so nothing can be backdated. The seal binds to whatever decision follows. Verification reruns the fingerprint on the original data and checks it against the seal. Match means genuine. Mismatch means something changed.
+verum takes a cryptographic fingerprint of raw input the moment it arrives. It seals that fingerprint with a timestamp from an external source the operator does not control, so nothing can be backdated. The seal binds to whatever decision follows. Verification reruns the fingerprint on the original data and checks it against the seal. Match means genuine. Mismatch means something changed.
 
 
 &nbsp;
@@ -159,8 +159,8 @@ One primitive. One gap. Everything else builds on top.
 &nbsp;
 
 ```
-arche/
-├── arche.py            the primitive
+verum/
+├── verum.py            the primitive
 ├── example.py          start here
 ├── example_space.py    satellite telemetry walkthrough
 └── README.md
