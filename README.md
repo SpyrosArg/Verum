@@ -109,16 +109,16 @@ python example.py
 from arche import seal, bind, verify
 
 # before the AI sees anything
-s = seal(data="altitude=408km status=nominal")
+s = seal(data="your raw input data here")
 
 # after the AI decides
-receipt = bind(seal=s, decision="no anomaly detected")
+receipt = bind(seal=s, decision="ai decision output here")
 
 # verify anytime — by anyone
-result = verify(receipt=receipt, original_data="altitude=408km status=nominal")
+result = verify(receipt=receipt, original_data="your raw input data here")
 
 print(result.valid)    # True
-print(result.reason)   # "input matches seal, timestamp intact"
+print(result.reason)   # "input matches seal, timestamp intact""
 ```
 
 Change a single character in the original data. `result.valid` becomes `False`.  
