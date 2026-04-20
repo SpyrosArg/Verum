@@ -14,41 +14,81 @@ That is the gap. arche closes it.
 ## The gap nobody is talking about
 
 ```mermaid
-flowchart LR
-    A([Real world data]) -->|silent manipulation\npossible here| B([AI system])
-    B --> C([Decision])
-    C --> D([Signed log ✓])
+flowchart TD
+    A(["  Real world data
+    ─────────────────
+    telemetry · sensors · feeds"])
 
-    style A fill:#f5f5f5,stroke:#ccc,color:#333
-    style B fill:#f5f5f5,stroke:#ccc,color:#333
-    style C fill:#f0fdf4,stroke:#86efac,color:#166534
-    style D fill:#f0fdf4,stroke:#86efac,color:#166534
+    B(["  Silent manipulation
+    ─────────────────
+    possible here · undetectable
+    no existing tool catches this"])
+
+    C(["  AI system
+    ─────────────────
+    processes whatever it receives"])
+
+    D(["  Decision
+    ─────────────────
+    signed and logged ✓"])
+
+    A -->|enters pipeline| B
+    B -->|reaches AI unchallenged| C
+    C --> D
+
+    style A fill:#f8fafc,stroke:#94a3b8,color:#334155,rx:12
+    style B fill:#fff1f2,stroke:#fda4af,color:#9f1239,rx:12
+    style C fill:#f8fafc,stroke:#94a3b8,color:#334155,rx:12
+    style D fill:#f0fdf4,stroke:#86efac,color:#166534,rx:12
 ```
 
-Existing systems prove the **right side** of this diagram beautifully.  
-The **left side**  whether what entered the AI was genuine, nobody proves.  
-An attacker who silently manipulates the input before the AI sees it leaves no trace in any log, any audit trail, anywhere.
+Logs prove the decision happened.  
+They cannot prove the input was genuine.
 
 &nbsp;
 
 ## What arche does
 
 ```mermaid
-flowchart LR
-    A([Data arrives]) --> B([arche seals it])
-    B --> C([AI processes])
-    C --> D([Decision + seal\ntravel together])
-    D --> E([Anyone verifies\nanytime])
+flowchart TD
+    A(["  Data arrives
+    ─────────────────
+    raw · untouched · live"])
 
-    style B fill:#dbeafe,stroke:#3b82f6,color:#1e40af
+    B(["  arche seals it
+    ─────────────────
+    fingerprint + external timestamp
+    before the AI sees anything"])
+
+    C(["  AI processes
+    ─────────────────
+    works as normal
+    nothing changes for the AI"])
+
+    D(["  Receipt is born
+    ─────────────────
+    decision + seal · travel together
+    compact · tamper-evident"])
+
+    E(["  Anyone verifies
+    ─────────────────
+    regulator · court · auditor
+    no AI access needed · ever"])
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+
+    style A fill:#f8fafc,stroke:#94a3b8,color:#334155
+    style B fill:#eff6ff,stroke:#93c5fd,color:#1e40af
+    style C fill:#f8fafc,stroke:#94a3b8,color:#334155
+    style D fill:#eff6ff,stroke:#93c5fd,color:#1e40af
     style E fill:#f0fdf4,stroke:#86efac,color:#166534
 ```
 
 One seal. Generated before the AI touches anything.  
-It travels with the decision. It never expires.  
-Anyone, a regulator, a court, another system, can verify it with nothing but the receipt and a public key. No access to the AI, the logs or the operator required.
-
-If the input was changed before the AI saw it, the seal breaks. Always.
+If the input was changed, the seal breaks. Always.
 
 &nbsp;
 
@@ -68,13 +108,13 @@ python example.py
 ```python
 from arche import seal, bind, verify
 
-# step 1 — before the AI sees anything
+# before the AI sees anything
 s = seal(data="altitude=408km status=nominal")
 
-# step 2 — after the AI decides
+# after the AI decides
 receipt = bind(seal=s, decision="no anomaly detected")
 
-# step 3 — verify anytime, by anyone
+# verify anytime — by anyone
 result = verify(receipt=receipt, original_data="altitude=408km status=nominal")
 
 print(result.valid)    # True
