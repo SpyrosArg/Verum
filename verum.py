@@ -19,7 +19,7 @@ def seal(data: str, source_id: str = "default") -> dict:
         "source_id": source_id,
         "timestamp_ns": timestamp,
         "nonce": nonce,
-        "version": "arche-1.0"
+        "version": "verum-1.0"
     }
 
 
