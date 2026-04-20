@@ -51,7 +51,6 @@ result = verify(receipt=receipt, original_data=telemetry)
 print(f"  result: {result}")
 
 # --- scenario 2: attacker spoofed the telemetry ---
-# an attacker changed attitude_status from nominal to nominal
 # but also changed the altitude slightly to mask a maneuver
 print("\n" + "-" * 60)
 print("  SCENARIO 2 — attacker spoofed altitude before AI saw it")
