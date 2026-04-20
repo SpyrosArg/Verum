@@ -1,7 +1,7 @@
-from arche import seal, bind, verify, export
+from verum import seal, bind, verify, export
 
 print("=" * 56)
-print("  arche — proof that AI saw what you think it saw")
+print("  verum — proof that AI saw what you think it saw")
 print("=" * 56)
 
 # a three-agent pipeline:
@@ -13,7 +13,7 @@ data = "customer_id=C9921 credit_score=710 income=52000 debt=8400"
 
 print(f"\n  agent 1 output:  {data}")
 
-# arche seals it at the handoff — before agent 2 touches it
+# verum seals it at the handoff — before agent 2 touches it
 s = seal(data=data, source_id="agent-1-data-fetcher")
 
 print(f"\n  sealed at handoff:  {s['fingerprint'][:36]}...")
@@ -53,7 +53,7 @@ print(f"  chain check:    {r_poisoned}")
 
 print("\n  agent 3 approved the loan based on false input.")
 print("  the decision log shows nothing wrong.")
-print("  arche exposes the poisoned handoff.")
+print("  verum exposes the poisoned handoff.")
 
 # --- show receipt ---
 print("\n" + "-" * 56)
