@@ -118,7 +118,7 @@ receipt = bind(seal=s, decision="ai decision output here")
 result = verify(receipt=receipt, original_data="your raw input data here")
 
 print(result.valid)    # True
-print(result.reason)   # "input matches seal, timestamp intact""
+print(result.reason)   # "input matches seal"
 ```
 
 Change a single character in the original data. `result.valid` becomes `False`.  
