@@ -56,7 +56,7 @@ Verum seals it.
 
 ### seal(data, source_id)
 
-Takes a SHA3-256 fingerprint of the raw input, combined with a nanosecond timestamp and a `secrets.token_hex(16)` nonce. Fields are length-prefixed before hashing to prevent separator collision — `data="a|b", source_id="c"` produces a different fingerprint than `data="a", source_id="b|c"`.
+Takes a SHA3-256 fingerprint of the raw input, combined with a nanosecond timestamp and a `secrets.token_hex(16)` nonce. Fields are length-prefixed before hashing to prevent separator collision, `data="a|b", source_id="c"` produces a different fingerprint than `data="a", source_id="b|c"`.
 
 ```python
 s = seal(data="your raw input data here", source_id="agent-1")
@@ -85,7 +85,7 @@ receipt = bind(seal=s, decision="ai decision output here")
 
 ### verify(receipt, original_data)
 
-Recomputes the fingerprint from the claimed original data using the same source_id, timestamp, and nonce stored in the receipt, then compares against the stored fingerprint using `hmac.compare_digest` , timing-safe, no early exit. Then independently verifies the chain hash.
+Recomputes the fingerprint from the claimed original data using the same source_id, timestamp, and nonce stored in the receipt, then compares against the stored fingerprint using `hmac.compare_digest` timing-safe, no early exit. Then independently verifies the chain hash.
 
 ```python
 result = verify(receipt=receipt, original_data="your raw input data here")
@@ -145,6 +145,7 @@ Receipts are JSON-serializable. Store them in your audit log, attach them to you
 | `verify(receipt, original_data)` | `receipt: dict`, `original_data: str` | `VerumResult` |
 | `export(receipt)` | `receipt: dict` | `str` (JSON) |
 | `load(receipt_json)` | `receipt_json: str` | `dict` |
+| `VerumMiddleware` | FastAPI/Starlette middleware | auto-seals every request |
 
 ### VerumResult
 
@@ -156,29 +157,57 @@ bool(result)    # same as result.valid
 
 ---
 
-## Security properties
+## FastAPI middleware
 
-- **SHA3-256** — fingerprint and chain hashes throughout
-- **`hmac.compare_digest`** — timing-safe comparison in verify(), no early exit
-- **`secrets.token_hex(16)`** — cryptographically random nonce, ensures two seals of identical data are always different
-- **Length-prefixed encoding** — prevents separator collision attacks at the fingerprint level
-- **No dependencies** — standard library only, no supply chain surface
+```python
+from fastapi import FastAPI
+from verum.middleware import VerumMiddleware
+
+app = FastAPI()
+app.add_middleware(VerumMiddleware)
+```
+
+Every POST request with a body is sealed automatically before any route handler runs. The receipt is available in two places:
+
+- `request.state.verum_seal` —> inside your route handler
+- `X-Verum-Fingerprint`, `X-Verum-Chain`, `X-Verum-Source` —> in the response headers
+
+```python
+@app.post("/decide")
+async def decide(request: Request):
+    seal = request.state.verum_seal
+    result = run_ai(await request.body())
+    receipt = bind(seal=seal, decision=result)
+    return {"decision": result, "receipt": export(receipt)}
+```
+
+Requires: `pip install verum[fastapi]`
 
 ---
 
-## Use cases
+## Security properties
 
-**AI agent pipelines** —> seal every handoff between agents. Any agent downstream can prove it received exactly what was sent. Makes multi-agent chains fully auditable at every link.
-
-**Space and critical infrastructure** —> AI anomaly detectors acting on telemetry. Verum proves the AI acted on the genuine sensor feed, not a replayed or modified signal.
-
-**Healthcare** —> EU AI Act Article 12 requires high-risk AI systems to log their decisions. Verum extends that to the input layer.
-
-**Finance** —> verifiable record of the exact data state at the moment of every algorithmic decision. Reproducible in any audit or dispute.
+- **SHA3-256** —> fingerprint and chain hashes throughout
+- **`hmac.compare_digest`** —> timing-safe comparison in verify(), no early exit
+- **`secrets.token_hex(16)`** —> cryptographically random nonce, ensures two seals of identical data are always different
+- **Length-prefixed encoding** —> prevents separator collision attacks at the fingerprint level
+- **No dependencies** —> standard library only, no supply chain surface
 
 
+---
 
+## Files
 
+```
+verum/
+├── verum/
+│   ├── __init__.py         package exports
+│   ├── core.py             the primitive
+│   └── middleware.py       FastAPI middleware
+├── example.py              three-agent pipeline walkthrough
+├── example_space.py        satellite telemetry scenario
+└── README.md
+```
 
 ---
 
