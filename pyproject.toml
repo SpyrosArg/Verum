@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "verum"
-version = "0.1.4"
+version = "0.1.5"
 description = "Proof that AI saw what you think it saw."
 authors = [
     { name = "Spyros Argyrakos" }
