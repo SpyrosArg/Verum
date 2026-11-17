@@ -88,7 +88,7 @@ receipt = bind(seal=s, decision="ai decision output here")
 
 ### verify(receipt, original_data)
 
-Recomputes the fingerprint from the claimed original data using the same source_id, timestamp, and nonce stored in the receipt, then compares against the stored fingerprint using `hmac.compare_digest` timing-safe, no early exit. Then independently verifies the chain hash.
+Recomputes the fingerprint from the claimed original data using the same source_id, timestamp, and nonce stored in the receipt, then compares against the stored fingerprint using `hmac.compare_digest`, which is timing-safe with no early exit. Then independently verifies the chain hash.
 
 ```python
 result = verify(receipt=receipt, original_data="your raw input data here")
