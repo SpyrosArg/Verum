@@ -4,6 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Verum, Proof that AI saw what you think it saw</title>
+    <meta name="description" content="Verum seals the data entering an AI system before processing, creating a tamper-evident proof anyone can verify later. A small Python library, standard library only." />
+    <meta name="author" content="Spyros Argyrakos" />
+    <meta name="theme-color" content="#f2ede6" />
+    <meta property="og:title" content="Verum: when AI decides, prove what it saw" />
+    <meta property="og:description" content="A tamper-evident seal for the data an AI acts on. pip install verum" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://spyrosarg.github.io/Verum/" />
+    <meta property="og:image" content="https://spyrosarg.github.io/Verum/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f0e0c'/%3E%3Cpolygon points='16,6 24.7,11 24.7,21 16,26 7.3,21 7.3,11' fill='none' stroke='%23c8750a' stroke-width='2.6' stroke-linejoin='round'/%3E%3C/svg%3E" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
@@ -757,13 +769,19 @@
         font-size: 0.68rem;
         color: var(--muted2);
         letter-spacing: 0.04em;
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .footer-copy:hover {
+        color: var(--amber);
       }
 
       @media (max-width: 900px) {
         .hero {
           grid-template-columns: 1fr;
-          padding: 6rem 1.5rem 3rem;
+          padding: 7rem 1.5rem 3.5rem;
           gap: 3rem;
+          min-height: 0;
         }
         .hero-right {
           display: none;
@@ -772,6 +790,9 @@
           padding: 1rem 1.5rem;
         }
         .nav-links {
+          gap: 1rem;
+        }
+        .nav-links a:not(.nav-cta) {
           display: none;
         }
         section {
@@ -816,10 +837,10 @@
         <a href="#what">What it does</a>
         <a href="#how">How it works</a>
         <a href="#use">Use cases</a>
-        <a href="https://github.com/SpyrosArg/Verum" target="_blank">GitHub</a>
+        <a href="https://github.com/SpyrosArg/Verum" target="_blank" rel="noopener">GitHub</a>
         <a
           href="https://pypi.org/project/verum/"
-          target="_blank"
+          target="_blank" rel="noopener"
           class="nav-cta"
           >pip install</a
         >
@@ -848,7 +869,7 @@
         <div class="hero-actions">
           <a
             href="https://github.com/SpyrosArg/Verum"
-            target="_blank"
+            target="_blank" rel="noopener"
             class="btn-ink"
           >
             <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24">
@@ -860,7 +881,7 @@
           </a>
           <a
             href="https://pypi.org/project/verum/"
-            target="_blank"
+            target="_blank" rel="noopener"
             class="btn-outline"
           >
             PyPI →
@@ -902,7 +923,7 @@
             <div class="stamp-core">
               <div class="stamp-symbol">⬡</div>
               <div class="stamp-word">Verum</div>
-              <div class="stamp-sub">v0.1.3 · Python 3.9+</div>
+              <div class="stamp-sub">v0.1.5 · Python 3.9+</div>
             </div>
             <div class="stamp-verified">VERIFIED ✓</div>
           </div>
@@ -998,7 +1019,7 @@
           <div class="fn-text">
             Fingerprints raw input using SHA3-256 with a nanosecond timestamp
             and a cryptographic nonce. Two calls on identical data always
-            produce different seals — the nonce guarantees uniqueness.
+            produce different seals, because the nonce guarantees uniqueness.
           </div>
         </div>
         <div class="fn-item">
@@ -1028,7 +1049,7 @@
             <div class="code-dot"></div>
             <div class="code-dot"></div>
           </div>
-          <div class="code-fn-label">example.py — pip install verum</div>
+          <div class="code-fn-label">example.py</div>
           <div style="width: 80px"></div>
         </div>
         <pre><span class="ck">from</span> <span class="cf">verum</span> <span class="ck">import</span> seal, bind, verify
@@ -1039,11 +1060,28 @@ s = <span class="cf">seal</span>(data=<span class="cs">"your raw input data here
 <span class="cc"># after the AI decides</span>
 receipt = <span class="cf">bind</span>(seal=s, decision=<span class="cs">"ai decision output here"</span>)
 
-<span class="cc"># verify anytime — by anyone</span>
+<span class="cc"># verify any time, by anyone</span>
 result = <span class="cf">verify</span>(receipt=receipt, original_data=<span class="cs">"your raw input data here"</span>)
 
 <span class="cf">print</span>(result.valid)    <span class="cc">  # True</span>
 <span class="cf">print</span>(result.reason)   <span class="cc">  # "input matches seal, timestamp intact"</span></pre>
+      </div>
+      <div class="code-block" style="margin-top: 1.25rem">
+        <div class="code-top">
+          <div class="code-dots">
+            <div class="code-dot"></div>
+            <div class="code-dot"></div>
+            <div class="code-dot"></div>
+          </div>
+          <div class="code-fn-label">FastAPI: seal every request</div>
+          <div style="width: 80px"></div>
+        </div>
+<pre><span class="cc"># pip install "verum[fastapi]"</span>
+<span class="ck">from</span> <span class="cf">fastapi</span> <span class="ck">import</span> FastAPI
+<span class="ck">from</span> <span class="cf">verum.middleware</span> <span class="ck">import</span> VerumMiddleware
+
+app = <span class="cf">FastAPI</span>()
+app.<span class="cf">add_middleware</span>(VerumMiddleware)  <span class="cc"># every request is sealed before your code runs</span></pre>
       </div>
     </section>
 
@@ -1112,7 +1150,7 @@ result = <span class="cf">verify</span>(receipt=receipt, original_data=<span cla
       >
       <h2>One primitive.<br />Zero dependencies.</h2>
       <p class="install-sub">
-        150 lines. Standard library only. Python 3.9+. Works with anything.
+        Under 150 lines. Standard library only. Python 3.9+. FastAPI support is an optional extra.
       </p>
 
       <div style="display: flex; justify-content: center">
@@ -1143,7 +1181,7 @@ result = <span class="cf">verify</span>(receipt=receipt, original_data=<span cla
       >
         <a
           href="https://github.com/SpyrosArg/Verum"
-          target="_blank"
+          target="_blank" rel="noopener"
           class="btn-ink"
         >
           <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24">
@@ -1155,7 +1193,7 @@ result = <span class="cf">verify</span>(receipt=receipt, original_data=<span cla
         </a>
         <a
           href="https://pypi.org/project/verum/"
-          target="_blank"
+          target="_blank" rel="noopener"
           class="btn-outline"
           >PyPI →</a
         >
@@ -1169,15 +1207,15 @@ result = <span class="cf">verify</span>(receipt=receipt, original_data=<span cla
     <footer>
       <div class="footer-logo">ver<em>um</em></div>
       <div class="footer-links">
-        <a href="https://github.com/SpyrosArg/Verum" target="_blank">GitHub</a>
-        <a href="https://pypi.org/project/verum/" target="_blank">PyPI</a>
+        <a href="https://github.com/SpyrosArg/Verum" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://pypi.org/project/verum/" target="_blank" rel="noopener">PyPI</a>
         <a
           href="https://github.com/SpyrosArg/Verum/blob/main/LICENSE"
-          target="_blank"
+          target="_blank" rel="noopener"
           >MIT License</a
         >
       </div>
-      <div class="footer-copy">Spyros Argyrakos · 2026</div>
+      <a class="footer-copy" href="https://spyrosarg.github.io/">More research by Spyros Argyrakos</a>
     </footer>
   </body>
 </html>
