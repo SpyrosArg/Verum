@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "verum"
-version = "0.1.5"
+version = "0.1.6"
 description = "Proof that AI saw what you think it saw."
 authors = [
     { name = "Spyros Argyrakos" }
@@ -14,7 +14,12 @@ license = "MIT"
 requires-python = ">=3.9"
 keywords = ["ai", "security", "cryptography", "audit", "integrity", "ai-agents", "fastapi", "middleware"]
 classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
+    "Framework :: FastAPI",
+    "Topic :: Security",
     "Topic :: Security :: Cryptography",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
@@ -30,5 +35,6 @@ py-modules = ["verum"]
 fastapi = ["fastapi", "starlette"]
 
 [project.urls]
-Homepage = "https://github.com/SpyrosArg/Verum"
+Homepage = "https://spyrosarg.github.io/Verum/"
 Repository = "https://github.com/SpyrosArg/Verum"
+Issues = "https://github.com/SpyrosArg/Verum/issues"

@@ -2,13 +2,16 @@
 
 > Proof that AI saw what you think it saw.
 
+Website: https://spyrosarg.github.io/Verum/
+
 AI systems are trusted to act on real data. Verum makes that trust verifiable, sealing the data entering an AI system before any processing begins and binding that seal to whatever decision follows. The result is a compact, tamper-evident receipt that anyone can verify, at any time, without access to the AI itself.
 
 ```
 pip install verum
 ```
 
-No dependencies. Standard library only. Python 3.9+.
+No dependencies for the core. Standard library only. Python 3.9+.
+FastAPI support is an optional extra: `pip install "verum[fastapi]"`.
 
 ---
 
@@ -31,7 +34,7 @@ Verum seals it.
   ┌─────────────┐
   │  seal()     │  SHA3-256 fingerprint
   │             │  nanosecond timestamp
-  │             │  32-byte nonce
+  │             │  16-byte nonce
   └──────┬──────┘
          │
          ▼
@@ -92,7 +95,7 @@ result = verify(receipt=receipt, original_data="your raw input data here")
 
 print(result.valid)    # True
 print(result.reason)   # "input matches seal, timestamp intact"
-print(bool(result))    # True — VerumResult supports bool context
+print(bool(result))    # True, because VerumResult works in a bool context
 ```
 
 If the data was altered:
@@ -120,14 +123,14 @@ print(export(receipt))
 ```json
 {
   "seal": {
-    "fingerprint": "3a7f4c2e1b9d8a6f0e5c3b1a9f7d4e2c0b8a6f4e2c0b8a6f4e2c0b8a6f4e2c0",
+    "fingerprint": "3a7f4c2e1b9d8a6f0e5c3b1a9f7d4e2c0b8a6f4e2c0b8a6f4e2c0b8a6f4e2c03",
     "source_id": "default",
     "timestamp_ns": 1745123456789012345,
-    "nonce": "8e3c1a9f2b4d6e0a1c3f5b7d",
+    "nonce": "8e3c1a9f2b4d6e0a1c3f5b7d8e3c1a9f",
     "version": "verum-1.0"
   },
-  "decision_hash": "d4f2c0b8a6e4c2a0f8e6d4c2b0a8f6e4d2c0b8a6f4e2c0b8a6f4e2c0b8a6f4",
-  "chain": "9b1c3e5a7d9f1b3e5a7d9f1b3e5a7d9f1b3e5a7d9f1b3e5a7d9f1b3e5a7d9f",
+  "decision_hash": "d4f2c0b8a6e4c2a0f8e6d4c2b0a8f6e4d2c0b8a6f4e2c0b8a6f4e2c0b8a6f4d4",
+  "chain": "9b1c3e5a7d9f1b3e5a7d9f1b3e5a7d9f1b3e5a7d9f1b3e5a7d9f1b3e5a7d9f9b",
   "bound_at_ns": 1745123456799012345
 }
 ```
@@ -169,8 +172,8 @@ app.add_middleware(VerumMiddleware)
 
 Every POST request with a body is sealed automatically before any route handler runs. The receipt is available in two places:
 
-- `request.state.verum_seal` —> inside your route handler
-- `X-Verum-Fingerprint`, `X-Verum-Chain`, `X-Verum-Source` —> in the response headers
+- `request.state.verum_seal`: inside your route handler
+- `X-Verum-Fingerprint`, `X-Verum-Chain`, `X-Verum-Source`: in the response headers
 
 ```python
 @app.post("/decide")
@@ -187,12 +190,21 @@ Requires: `pip install verum[fastapi]`
 
 ## Security properties
 
-- **SHA3-256** —> fingerprint and chain hashes throughout
-- **`hmac.compare_digest`** —> timing-safe comparison in verify(), no early exit
-- **`secrets.token_hex(16)`** —> cryptographically random nonce, ensures two seals of identical data are always different
-- **Length-prefixed encoding** —> prevents separator collision attacks at the fingerprint level
-- **No dependencies** —> standard library only, no supply chain surface
+- **SHA3-256**: fingerprint and chain hashes throughout
+- **`hmac.compare_digest`**: timing-safe comparison in verify(), no early exit
+- **`secrets.token_hex(16)`**: cryptographically random nonce, ensures two seals of identical data are always different
+- **Length-prefixed encoding**: prevents separator collision attacks at the fingerprint level
+- **No dependencies**: standard library only, no supply chain surface
 
+
+---
+
+## Use cases
+
+- **AI agent pipelines:** seal every handoff between agents. Any agent downstream can prove it received exactly what was sent, which makes multi-agent chains auditable at every link.
+- **Space and critical infrastructure:** AI anomaly detectors act on telemetry. Verum proves the AI acted on the genuine sensor feed, not a replayed or modified signal.
+- **Healthcare and regulated industries:** EU AI Act Article 12 requires high-risk AI systems to keep logs. Verum extends that record to the input layer.
+- **Finance:** a verifiable record of the exact data at the moment of every algorithmic decision, reproducible in any audit or dispute.
 
 ---
 
@@ -211,4 +223,6 @@ verum/
 
 ---
 
-MIT  use it, break it, build on it.
+MIT licensed. Use it, break it, build on it.
+
+Built by Spyros Argyrakos. More research at https://spyrosarg.github.io/
